@@ -170,6 +170,18 @@ body::before {
   box-shadow: 0 0 20px var(--accent-glow);
 }
 .tb-btn:active { transform: scale(.96); }
+.tb-btn.extension {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 0 12px rgba(102, 126, 234, .4);
+}
+.tb-btn.extension:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 0 20px rgba(102, 126, 234, .6);
+}
 
 /* 语言切换按钮 */
 #btn-lang {
