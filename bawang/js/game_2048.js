@@ -122,8 +122,10 @@ GAME_MODULES.g2048 = (() => {
         const dirs={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};
         if(dirs[e.key]&&!over&&!won){move(dirs[e.key]);e.preventDefault();}
         if(e.key===' '){
-          if(won) restart(level<LEVEL_CFG.length-1?level+1:0);
-          else if(over) restart(level);
+          if(won){
+            triggerDonateOnGameClear();
+            restart(level<LEVEL_CFG.length-1?level+1:0);
+          } else if(over) restart(level);
           e.preventDefault();
         }
       };

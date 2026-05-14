@@ -34,3 +34,12 @@ function drawHint(cx, w, h, lines) {
   });
   cx.restore();
 }
+
+/**
+ * 通关时触发打赏弹窗（每次游戏通关时随机显示）
+ */
+function triggerDonateOnGameClear() {
+  if (Math.random() > 0.5 && window.app && typeof window.app.openDonate === 'function') {
+    setTimeout(() => window.app.openDonate(), 600);
+  }
+}

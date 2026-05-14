@@ -112,7 +112,7 @@ GAME_MODULES.snake = (() => {
       if(d.x!==-dir.x||d.y!==-dir.y) nextDir=d;
       e.preventDefault();
     }
-    if(e.key===' '){ if(dead) restart(); e.preventDefault(); }
+    if(e.key===' '){ if(dead){ triggerDonateOnGameClear(); restart(); } e.preventDefault(); }
   }
 
   function restart(){

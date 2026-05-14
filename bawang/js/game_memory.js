@@ -106,8 +106,10 @@ GAME_MODULES.memory = (() => {
       document.removeEventListener('keydown',keyH);
       keyH=e=>{
         if(e.key===' '){
-          if(matchedPairs===cols*rows/2) initLevel(matchedPairs===cols*rows/2&&level<LEVEL_CFG.length-1?level+1:0);
-          else initLevel(level);
+          if(matchedPairs===cols*rows/2){
+            triggerDonateOnGameClear();
+            initLevel(matchedPairs===cols*rows/2&&level<LEVEL_CFG.length-1?level+1:0);
+          } else initLevel(level);
           draw();
         }
       };

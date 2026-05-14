@@ -117,7 +117,7 @@ GAME_MODULES.minesweeper = (() => {
     if(revealed[r][c]||flagged[r][c]) return;
     if(!started){started=true;lastSec=performance.now();placeMines(r,c);}
     if(board[r][c]===-1){revealed[r][c]=true;over=true;for(let i=0;i<d.rows;i++) for(let j=0;j<d.cols;j++) if(board[i][j]===-1) revealed[i][j]=true;return;}
-    reveal(r,c); if(checkWin()){won=true;mineCount=0;}
+    reveal(r,c); if(checkWin()){won=true;mineCount=0;triggerDonateOnGameClear();}
   }
   function onContext(e){
     e.preventDefault();
