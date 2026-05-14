@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>RetroFC</title>
+  <style>
+    /* Popup 固定尺寸，覆盖网站版响应式 */
+    body {
+      width: 600px;
+      height: 440px;
+      overflow: hidden;
+      padding: 0;
+    }
+    #topbar { height: 38px; padding: 0 10px; }
+    #topbar .logo-text { font-size: 11px; }
+    #topbar .logo-dot { width: 8px; height: 8px; }
+    #game-status { font-size: 11px; }
+    .tb-btn { height: 26px; padding: 0 10px; font-size: 10px; }
+    #btn-lang { width: 30px; height: 24px; font-size: 10px; border-radius: 12px; }
+    #btn-donate { width: 24px; height: 24px; font-size: 12px; }
+    #main-area { padding-top: 38px; gap: 6px; }
+    #screen-frame { max-width: 420px; max-height: 300px; }
+    #controls-hint { padding: 6px 12px; gap: 4px; border-radius: 12px; min-width: 220px; }
+    #controls-hint kbd { min-width: 18px; height: 18px; font-size: 9px; padding: 0 3px; }
+    #controls-hint .hint-label { font-size: 10px; }
+    #controls-hint .hint-keys { min-width: 80px; gap: 2px; }
+    .standby-logo { font-size: 18px; }
+    .standby-subtitle { font-size: 11px; }
+    .standby-start-btn { height: 32px; padding: 0 18px; font-size: 12px; }
+    #modal { width: 560px; max-height: 380px; }
+    #modal-header { padding: 12px 16px 10px; }
+    #modal-title { font-size: 13px; }
+    #search-input { height: 28px; font-size: 12px; }
+    #game-grid {
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+      grid-auto-rows: 100px;
+      gap: 8px;
+      padding: 10px 16px;
+    }
+    .game-cover { height: 66px; }
+    .game-cover-icon { font-size: 24px; }
+    .game-name { font-size: 10px; padding: 4px 6px; }
+    .game-card.playing::after { font-size: 8px; padding: 1px 6px; top: 4px; right: 4px; }
+    #game-count { padding: 6px 16px 8px; font-size: 10px; }
+    #toast { top: 48px; font-size: 11px; padding: 6px 14px; }
+    #donate-modal { width: min(88vw, 320px); }
+    .donate-tab { height: 28px; font-size: 11px; }
+    #donate-tabs { margin: 10px 14px 0; }
+    .donate-panel { padding: 12px 16px 16px; }
+    #donate-panel-cn img { width: 150px; height: 150px; }
+    .donate-link-btn { height: 40px; font-size: 13px; max-width: 240px; }
+    .donate-msg { font-size: 10px; }
+  </style>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav id="topbar">
+  <div class="logo-group">
+    <div class="logo-dot"></div>
+    <span class="logo-text">RetroFC</span>
+  </div>
+  <div id="game-status" data-i18n="status-standby">待机中</div>
+  <div class="nav-actions">
+    <button id="btn-lang" title="切换语言 / Switch Language">中</button>
+    <button id="btn-donate" title="打赏">☕</button>
+    <button id="btn-reset" class="tb-btn" data-i18n="btn-reset">↺ 重置</button>
+    <button id="btn-change-game" class="tb-btn primary" data-i18n="btn-change-game">游戏库</button>
+  </div>
+</nav>
+
+<main id="main-area">
+  <div id="screen-container">
+    <div id="screen-frame">
+      <canvas id="game-canvas"></canvas>
+      <div id="standby">
+        <div class="standby-logo">RETROFC</div>
+        <div class="standby-subtitle" data-i18n="standby-subtitle">选择一款游戏开始</div>
+        <button class="standby-start-btn" id="standby-start-btn" data-i18n="standby-start-btn">浏览游戏库</button>
+      </div>
+      <div id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div id="loading-text">加载中...</div>
+        <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+      </div>
+    </div>
+    <div id="controls-hint">
+      <div class="hint-row">
+        <div class="hint-keys"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd></div>
+        <span class="hint-label">方向</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <div id="modal-header">
+      <div id="modal-title" data-i18n="modal-title">游戏库</div>
+      <div id="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" data-i18n-placeholder="search-placeholder" placeholder="搜索游戏...">
+      </div>
+      <button id="modal-close">✕</button>
+    </div>
+    <div id="game-grid"></div>
+    <div id="game-count"></div>
+  </div>
+</div>
+
+<div id="donate-overlay">
+  <div id="donate-modal">
+    <div id="donate-modal-header">
+      <div id="donate-modal-title" data-i18n="donate-title">☕ 支持作者</div>
+      <button id="donate-modal-close">✕</button>
+    </div>
+    <div id="donate-tabs">
+      <button class="donate-tab active" data-tab="cn" data-i18n="donate-tab-cn">🇨🇳 国内打赏</button>
+      <button class="donate-tab" data-tab="intl" data-i18n="donate-tab-intl">🌍 International</button>
+    </div>
+    <div class="donate-panel active" id="donate-panel-cn">
+      <img src="ds.jpg" alt="Donate QR">
+      <div class="donate-heart">❤️</div>
+      <div class="donate-msg" data-i18n-html="donate-msg-cn">感谢您的支持！<br>微信/支付宝扫码打赏</div>
+    </div>
+    <div class="donate-panel" id="donate-panel-intl">
+      <a class="donate-link-btn paypal" id="donate-paypal-link"
+         href="https://paypal.me/yuzec933"
+         target="_blank" rel="noopener">
+        💳 PayPal.me
+      </a>
+      <div class="donate-heart">❤️</div>
+      <div class="donate-msg" data-i18n-html="donate-msg-intl">Thanks for your support!<br>Every coffee keeps the games coming ☕</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/game_modules.js"></script>
+<script src="js/game_snake.js"></script>
+<script src="js/game_2048.js"></script>
+<script src="js/game_memory.js"></script>
+<script src="js/game_breakout.js"></script>
+<script src="js/game_minesweeper.js"></script>
+<script src="js/game_whackamole.js"></script>
+<script src="js/game_lianliankan.js"></script>
+<script src="js/game_sokoban.js"></script>
+<script src="js/game_sandfall.js"></script>
+<script src="js/games-data.js"></script>
+<script src="js/popup.js"></script>
+</body>
+</html>

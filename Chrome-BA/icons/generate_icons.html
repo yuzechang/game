@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>复古红白机游戏模拟器 — 图标生成器</title>
+  <style>
+    /* ── 页面基础 ── */
+    body {
+      margin: 0;
+      background: #0d0d0d;
+      color: #f0f0f0;
+      font-family: 'Press Start 2P', 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 64px;
+      gap: 32px;
+    }
+    h1 {
+      font-size: 14px;
+      color: #e84545;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 0;
+    }
+    p.sub {
+      font-size: 9px;
+      color: #666;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* ── 预览区 ── */
+    .preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+    }
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .preview-item span {
+      font-size: 8px;
+      color: #888;
+    }
+    canvas {
+      image-rendering: pixelated;
+      border: 1px solid #2d2d2d;
+      background: #1a1a2e;
+    }
+    /* 小尺寸放大展示 */
+    #preview-16  { width: 96px;  height: 96px; }
+    #preview-32  { width: 128px; height: 128px; }
+    #preview-48  { width: 144px; height: 144px; }
+    #preview-128 { width: 256px; height: 256px; }
+
+    /* ── 按钮 ── */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    button {
+      font-family: inherit;
+      font-size: 9px;
+      padding: 10px 18px;
+      background: #e84545;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background 0.15s;
+    }
+    button:hover { background: #c73030; }
+    button.all {
+      background: #ffb347;
+      color: #0d0d0d;
+    }
+    button.all:hover { background: #e09000; }
+  </style>
+</head>
+<body>
+  <h1>NES 图标生成器</h1>
+  <p class="sub">复古红白机游戏模拟器 Chrome 插件图标 · 4 尺寸</p>
+
+  <div class="preview-grid">
+    <div class="preview-item">
+      <canvas id="canvas-16"  width="16"  height="16"></canvas>
+      <canvas id="preview-16" width="16"  height="16"></canvas>
+      <span>16 × 16</span>
+    </div>
+    <div class="preview-item">
+      <canvas id="canvas-32"  width="32"  height="32"></canvas>
+      <canvas id="preview-32" width="32"  height="32"></canvas>
+      <span>32 × 32</span>
+    </div>
+    <div class="preview-item">
+      <canvas id="canvas-48"  width="48"  height="48"></canvas>
+      <canvas id="preview-48" width="48"  height="48"></canvas>
+      <span>48 × 48</span>
+    </div>
+    <div class="preview-item">
+      <canvas id="canvas-128" width="128" height="128"></canvas>
+      <canvas id="preview-128" width="128" height="128"></canvas>
+      <span>128 × 128</span>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button onclick="download(16)">下载 icon-16.png</button>
+    <button onclick="download(32)">下载 icon-32.png</button>
+    <button onclick="download(48)">下载 icon-48.png</button>
+    <button onclick="download(128)">下载 icon-128.png</button>
+    <button class="all" onclick="downloadAll()">一键下载全部 4 个</button>
+  </div>
+
+  <script>
+  /* ================================================================
+     调色板
+  ================================================================ */
+  const C = {
+    bg:      '#1a1a2e', // 深灰蓝底色
+    body:    '#e84545', // 红色主体
+    bodyDk:  '#b03030', // 红色阴影
+    white:   '#f5f5f5', // 白色细节
+    gray:    '#4a4a6a', // 中灰（手柄边缘）
+    dark:    '#111120', // 最深色（描边）
+    btn:     '#222244', // 方向键底盘
+    dpad:    '#2a2a55', // 十字键
+    abBtn:   '#e84545', // AB 键（同主色）
+    selectStart: '#c0c0d0', // SELECT/START 按钮
+  };
+
+  /* ================================================================
+     像素绘制工具
+     drawPixel(ctx, x, y, size, color)  — 单像素
+     drawRect (ctx, x, y, w, h, size, color) — 矩形块
+  ================================================================ */
+  function drawPixel(ctx, x, y, sz, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * sz, y * sz, sz, sz);
+  }
+
+  function drawRect(ctx, x, y, w, h, sz, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * sz, y * sz, w * sz, h * sz);
+  }
+
+  /* ================================================================
+     drawController(ctx, size)
+     以「逻辑像素坐标系」绘制手柄，坐标在 16x16 网格内设计，
+     然后通过 sz = size/16 缩放到目标尺寸。
+  ================================================================ */
+  function drawController(ctx, size) {
+    const sz = size / 16; // 每个逻辑像素对应的实际像素数
+
+    // ── 1. 背景 ──────────────────────────────────────────────────
+    drawRect(ctx, 0, 0, 16, 16, sz, C.bg);
+
+    // ── 2. 手柄主体（圆角矩形近似，用 fillRect + 角落覆盖） ──────
+    // 主体区域：x=1..14, y=4..13（逻辑坐标）
+    drawRect(ctx, 1, 4, 14, 9, sz, C.body);
+
+    // 四角去掉 1px 模拟圆角
+    drawPixel(ctx, 1,  4, sz, C.bg);
+    drawPixel(ctx, 14, 4, sz, C.bg);
+    drawPixel(ctx, 1, 12, sz, C.bg);
+    drawPixel(ctx, 14,12, sz, C.bg);
+
+    // ── 3. 手柄顶部中央轻微弧形（用 1px 像素描绘）──────────────
+    // 顶部描边阴影
+    drawRect(ctx, 2, 4, 12, 1, sz, C.bodyDk);
+    // 底部描边
+    drawRect(ctx, 2, 12, 12, 1, sz, C.bodyDk);
+
+    // ── 4. 方向键（D-Pad）在左侧 ────────────────────────────────
+    // D-Pad 底盘
+    drawRect(ctx, 2, 6, 5, 5, sz, C.btn);
+    // 十字形
+    drawRect(ctx, 3, 7, 3, 1, sz, C.dpad); // 左横
+    drawRect(ctx, 3, 8, 3, 1, sz, C.dpad); // 中横（y=8）
+    drawRect(ctx, 3, 9, 3, 1, sz, C.dpad); // 右横
+    drawRect(ctx, 4, 6, 1, 4, sz, C.dpad); // 纵（3格高）
+    drawRect(ctx, 4, 7, 1, 4, sz, C.dpad); // 扩一格到 y=10
+    // 十字中心高亮
+    drawPixel(ctx, 4, 8, sz, C.white);
+
+    // ── 5. SELECT / START 按钮（中央小按钮）──────────────────────
+    drawRect(ctx, 6, 9, 1, 1, sz, C.selectStart); // SELECT
+    drawRect(ctx, 8, 9, 1, 1, sz, C.selectStart); // START
+    // 小标记：白点
+    drawPixel(ctx, 6, 9, sz, C.white);
+    drawPixel(ctx, 8, 9, sz, C.white);
+
+    // ── 6. A / B 按钮（右侧）────────────────────────────────────
+    // B 按钮（左）
+    drawRect(ctx, 10, 8, 2, 2, sz, C.dark);
+    drawRect(ctx, 10, 8, 2, 2, sz, C.abBtn);
+    drawPixel(ctx, 10, 8, sz, C.bodyDk);
+    drawPixel(ctx, 11, 9, sz, C.bodyDk);
+    drawPixel(ctx, 10, 8, sz, '#ff6b6b');  // 高光
+
+    // A 按钮（右）
+    drawRect(ctx, 12, 7, 2, 2, sz, C.dark);
+    drawRect(ctx, 12, 7, 2, 2, sz, C.abBtn);
+    drawPixel(ctx, 12, 7, sz, '#ff6b6b');  // 高光
+    drawPixel(ctx, 13, 8, sz, C.bodyDk);
+
+    // ── 7. 白色 "A" / "B" 文字（仅 128px 版本）────────────────
+    if (size >= 64) {
+      ctx.fillStyle = C.white;
+      ctx.font = `bold ${Math.max(4, sz * 1.2)}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('B', (10 + 1) * sz, (8 + 1) * sz);
+      ctx.fillText('A', (12 + 1) * sz, (7 + 1) * sz);
+    }
+
+    // ── 8. 顶部左右各一个扬声器格栅孔（点阵）────────────────────
+    if (size >= 48) {
+      const grill = C.bodyDk;
+      // 左侧格栅
+      for (let gx = 2; gx <= 3; gx++) {
+        drawPixel(ctx, gx, 5, sz, grill);
+      }
+      // 右侧格栅
+      for (let gx = 12; gx <= 13; gx++) {
+        drawPixel(ctx, gx, 5, sz, grill);
+      }
+    }
+
+    // ── 9. 外轮廓描边（遍历主体边缘上色）──────────────────────
+    ctx.strokeStyle = C.dark;
+    ctx.lineWidth = Math.max(0.5, sz * 0.3);
+    ctx.beginPath();
+    const r = sz * 1; // 圆角半径
+    const x0 = 2 * sz, y0 = 4 * sz;
+    const x1 = 14 * sz, y1 = 13 * sz;
+    ctx.moveTo(x0 + r, y0);
+    ctx.lineTo(x1 - r, y0);
+    ctx.arcTo(x1, y0, x1, y0 + r, r);
+    ctx.lineTo(x1, y1 - r);
+    ctx.arcTo(x1, y1, x1 - r, y1, r);
+    ctx.lineTo(x0 + r, y1);
+    ctx.arcTo(x0, y1, x0, y1 - r, r);
+    ctx.lineTo(x0, y0 + r);
+    ctx.arcTo(x0, y0, x0 + r, y0, r);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  /* ================================================================
+     针对超小尺寸（16px）的极简绘制 —— 直接画一个方块手柄轮廓
+  ================================================================ */
+  function drawController16(ctx) {
+    const sz = 1;
+    // 底色
+    drawRect(ctx, 0, 0, 16, 16, sz, C.bg);
+    // 手柄主体
+    drawRect(ctx, 1, 3, 14, 10, sz, C.body);
+    // 圆角去除
+    drawPixel(ctx,  1,  3, sz, C.bg);
+    drawPixel(ctx, 14,  3, sz, C.bg);
+    drawPixel(ctx,  1, 12, sz, C.bg);
+    drawPixel(ctx, 14, 12, sz, C.bg);
+    // D-pad
+    drawPixel(ctx, 3, 8, sz, C.white);
+    drawPixel(ctx, 4, 7, sz, C.white);
+    drawPixel(ctx, 4, 8, sz, C.white);
+    drawPixel(ctx, 4, 9, sz, C.white);
+    drawPixel(ctx, 5, 8, sz, C.white);
+    // A / B 键
+    drawPixel(ctx, 10, 8, sz, C.white);
+    drawPixel(ctx, 12, 7, sz, C.white);
+    // SELECT/START
+    drawPixel(ctx, 6, 9, sz, C.gray);
+    drawPixel(ctx, 8, 9, sz, C.gray);
+  }
+
+  /* ================================================================
+     主渲染入口
+  ================================================================ */
+  function render(size) {
+    const canvas = document.getElementById(`canvas-${size}`);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, size, size);
+
+    if (size === 16) {
+      drawController16(ctx);
+    } else {
+      drawController(ctx, size);
+    }
+
+    // 同步到放大预览画布（nearest-neighbor 缩放）
+    const preview = document.getElementById(`preview-${size}`);
+    const pctx = preview.getContext('2d');
+    pctx.imageSmoothingEnabled = false;
+    pctx.clearRect(0, 0, preview.width, preview.height);
+    pctx.drawImage(canvas, 0, 0, preview.width, preview.height);
+  }
+
+  function renderAll() {
+    [16, 32, 48, 128].forEach(render);
+  }
+
+  /* ================================================================
+     下载工具
+  ================================================================ */
+  function download(size) {
+    const canvas = document.getElementById(`canvas-${size}`);
+    const link = document.createElement('a');
+    link.download = `icon-${size}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  function downloadAll() {
+    // 每个下载间隔 120ms 避免浏览器阻拦
+    [16, 32, 48, 128].forEach((size, i) => {
+      setTimeout(() => download(size), i * 150);
+    });
+  }
+
+  /* ── 页面加载后立即渲染 ── */
+  window.addEventListener('DOMContentLoaded', renderAll);
+  </script>
+</body>
+</html>

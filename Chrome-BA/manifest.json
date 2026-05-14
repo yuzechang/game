@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "RetroFC – 怀旧游戏机 / Retro Game Console",
+  "version": "1.0.0",
+  "description": "随时随地玩经典怀旧游戏，内置红白机模拟器 | Play classic retro games anytime, built-in NES emulator",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "32":  "icons/icon32.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "RetroFC 怀旧游戏 / Retro Game Console"
+  },
+  "icons": {
+    "16":  "icons/icon16.png",
+    "32":  "icons/icon32.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://yx.vkga.cn/*",
+    "http://fc.my71.top/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

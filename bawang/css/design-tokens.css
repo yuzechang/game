@@ -1,0 +1,389 @@
+/* ====================================================================
+   设计系统 Token 文件 — 复古游戏机站点
+   风格：现代复古 · 暗色调 · 像素字体
+   维护说明：所有颜色、字体、间距等基础值在此统一定义，
+             业务样式文件通过 var(--token-name) 引用，禁止硬编码原始值。
+   ==================================================================== */
+
+/* ====================================================================
+   一、色彩系统 (Color Tokens)
+   ==================================================================== */
+:root {
+  /* ── 品牌主色（深红） ── */
+  --color-primary:        #e84545;   /* 主红，按钮/高亮/强调 */
+  --color-primary-hover:  #c73030;   /* 悬停加深 */
+  --color-primary-active: #a52020;   /* 按下更深 */
+  --color-primary-light:  #ff6b6b;   /* 浅红，用于高光/渐变起点 */
+  --color-primary-dim:    #7a1a1a;   /* 暗红，禁用/低强调 */
+
+  /* ── 辅色（橙黄） ── */
+  --color-secondary:        #ffb347; /* 橙黄，次要强调/徽标/等级 */
+  --color-secondary-hover:  #e09000; /* 悬停加深 */
+  --color-secondary-active: #c07a00; /* 按下更深 */
+  --color-secondary-light:  #ffd080; /* 浅橙，用于高亮文字 */
+  --color-secondary-dim:    #7a5200; /* 暗橙，低强调 */
+
+  /* ── 背景层级 ── */
+  --color-bg-root:    #0d0d0d; /* 最深背景，页面底层 */
+  --color-bg-surface: #1a1a1a; /* 卡片/面板背景 */
+  --color-bg-raised:  #252525; /* 次级卡片/悬浮元素 */
+  --color-bg-overlay: #1a1a2e; /* 蓝调深灰，图标/复古氛围区块 */
+  --color-bg-modal:   rgba(13, 13, 13, 0.88); /* 遮罩层 */
+
+  /* ── 边框 ── */
+  --color-border:         #2d2d2d; /* 标准边框 */
+  --color-border-strong:  #3d3d3d; /* 强调边框 */
+  --color-border-focus:   #e84545; /* 聚焦边框（同主色）*/
+  --color-border-glow:    rgba(232, 69, 69, 0.4); /* 发光描边 */
+
+  /* ── 文字 ── */
+  --color-text-primary:   #f0f0f0; /* 主要正文 */
+  --color-text-secondary: #a0a0a0; /* 次要描述 */
+  --color-text-muted:     #666666; /* 占位符/不可用 */
+  --color-text-inverse:   #0d0d0d; /* 浅色背景上的深色文字 */
+  --color-text-accent:    #e84545; /* 强调文字（同主色）*/
+  --color-text-gold:      #ffb347; /* 金色文字（分数/等级）*/
+  --color-text-link:      #e84545;
+  --color-text-link-hover:#ff6b6b;
+
+  /* ── 语义色 ── */
+  --color-success:        #10c060; /* 成功/已解锁 */
+  --color-success-bg:     rgba(16, 192, 96, 0.12);
+  --color-warning:        #ffb347; /* 警告/注意（同辅色）*/
+  --color-warning-bg:     rgba(255, 179, 71, 0.12);
+  --color-error:          #e84545; /* 错误/危险（同主色）*/
+  --color-error-bg:       rgba(232, 69, 69, 0.12);
+  --color-info:           #4488ff; /* 信息提示 */
+  --color-info-bg:        rgba(68, 136, 255, 0.12);
+
+  /* ── 像素/扫描线效果专用 ── */
+  --color-scanline:       rgba(0, 0, 0, 0.25); /* 扫描线覆盖层 */
+  --color-pixel-dot:      rgba(255, 255, 255, 0.04); /* 像素点阵高光 */
+  --color-crt-vignette:   radial-gradient(ellipse at center,
+                            transparent 60%,
+                            rgba(0,0,0,0.7) 100%); /* CRT 暗角 */
+}
+
+
+/* ====================================================================
+   二、字体系统 (Typography Tokens)
+   ==================================================================== */
+:root {
+  /* ── 字体族 ── */
+  --font-pixel:   'Press Start 2P', 'Courier New', monospace; /* 像素风 */
+  --font-ui:      'Rajdhani', 'Segoe UI', sans-serif;          /* 界面文字 */
+  --font-body:    'Share Tech Mono', 'Courier New', monospace; /* 正文/说明 */
+  --font-display: 'Press Start 2P', monospace;                 /* 大标题 */
+  --font-code:    'JetBrains Mono', 'Fira Code', monospace;    /* 代码/数值 */
+
+  /* ── 字号比例（基准 16px）── */
+  --font-size-2xs:  0.5rem;   /*  8px — 像素小标注 */
+  --font-size-xs:   0.625rem; /* 10px — 辅助说明 */
+  --font-size-sm:   0.75rem;  /* 12px — 次要文字 */
+  --font-size-base: 0.875rem; /* 14px — 标准正文 */
+  --font-size-md:   1rem;     /* 16px — 中等 */
+  --font-size-lg:   1.125rem; /* 18px */
+  --font-size-xl:   1.25rem;  /* 20px */
+  --font-size-2xl:  1.5rem;   /* 24px */
+  --font-size-3xl:  1.875rem; /* 30px */
+  --font-size-4xl:  2.25rem;  /* 36px */
+  --font-size-5xl:  3rem;     /* 48px — 英雄大标题 */
+
+  /* ── 字重 ── */
+  --font-weight-normal:    400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-extrabold: 800;
+
+  /* ── 行高 ── */
+  --line-height-tight:  1.25;
+  --line-height-snug:   1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed:1.75;
+  --line-height-loose:  2;
+
+  /* ── 字间距 ── */
+  --letter-spacing-tight:   -0.02em;
+  --letter-spacing-normal:   0;
+  --letter-spacing-wide:     0.05em;
+  --letter-spacing-wider:    0.1em;
+  --letter-spacing-widest:   0.2em;  /* 像素字体大标题常用 */
+  --letter-spacing-pixel:    0.08em; /* Press Start 2P 推荐值 */
+}
+
+
+/* ====================================================================
+   三、间距系统 (Spacing Tokens) — 基准 4px
+   ==================================================================== */
+:root {
+  --space-0:    0;
+  --space-px:   1px;
+  --space-0-5:  0.125rem;  /*  2px */
+  --space-1:    0.25rem;   /*  4px */
+  --space-2:    0.5rem;    /*  8px */
+  --space-3:    0.75rem;   /* 12px */
+  --space-4:    1rem;      /* 16px */
+  --space-5:    1.25rem;   /* 20px */
+  --space-6:    1.5rem;    /* 24px */
+  --space-8:    2rem;      /* 32px */
+  --space-10:   2.5rem;    /* 40px */
+  --space-12:   3rem;      /* 48px */
+  --space-16:   4rem;      /* 64px */
+  --space-20:   5rem;      /* 80px */
+  --space-24:   6rem;      /* 96px */
+  --space-32:   8rem;      /* 128px */
+}
+
+
+/* ====================================================================
+   四、尺寸系统 (Sizing Tokens)
+   ==================================================================== */
+:root {
+  /* ── 容器最大宽度 ── */
+  --container-sm:   640px;
+  --container-md:   768px;
+  --container-lg:   1024px;
+  --container-xl:   1280px;
+  --container-2xl:  1440px;
+
+  /* ── 触控目标最小尺寸（WCAG 无障碍要求）── */
+  --touch-target-min: 44px;
+
+  /* ── 圆角 ── */
+  --radius-none:  0;
+  --radius-sm:    2px;  /* 像素风锐角 */
+  --radius-base:  4px;
+  --radius-md:    6px;
+  --radius-lg:    8px;
+  --radius-xl:    12px;
+  --radius-2xl:   16px;
+  --radius-full:  9999px; /* 胶囊形 */
+
+  /* ── Z 轴层级 ── */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+}
+
+
+/* ====================================================================
+   五、阴影与发光效果 (Shadow & Glow Tokens)
+   ==================================================================== */
+:root {
+  /* ── 标准阴影 ── */
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm:   0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-xl:   0 16px 48px rgba(0, 0, 0, 0.8);
+  --shadow-inner:inset 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  /* ── 像素/游戏风发光 ── */
+  --glow-primary: 0 0 8px rgba(232, 69, 69, 0.6),
+                  0 0 16px rgba(232, 69, 69, 0.3),
+                  0 0 32px rgba(232, 69, 69, 0.1);
+  --glow-secondary:0 0 8px rgba(255, 179, 71, 0.6),
+                  0 0 16px rgba(255, 179, 71, 0.3);
+  --glow-white:   0 0 8px rgba(255, 255, 255, 0.4),
+                  0 0 16px rgba(255, 255, 255, 0.15);
+  --glow-success: 0 0 8px rgba(16, 192, 96, 0.5),
+                  0 0 16px rgba(16, 192, 96, 0.2);
+
+  /* ── 文字发光（neon 效果）── */
+  --text-glow-primary:  0 0 6px rgba(232, 69, 69, 0.8),
+                        0 0 12px rgba(232, 69, 69, 0.4);
+  --text-glow-secondary:0 0 6px rgba(255, 179, 71, 0.8),
+                        0 0 12px rgba(255, 179, 71, 0.4);
+
+  /* ── 卡片发光描边 ── */
+  --card-glow: 0 0 0 1px rgba(232, 69, 69, 0.3),
+               0 4px 16px rgba(232, 69, 69, 0.15);
+}
+
+
+/* ====================================================================
+   六、过渡与动画 (Transition & Animation Tokens)
+   ==================================================================== */
+:root {
+  /* ── 缓动函数 ── */
+  --ease-linear:   linear;
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:      cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1); /* 弹跳 */
+  --ease-pixel:    steps(4, end);                       /* 像素跳变 */
+
+  /* ── 过渡时长 ── */
+  --duration-instant: 0ms;
+  --duration-fast:    100ms;
+  --duration-normal:  200ms;
+  --duration-slow:    300ms;
+  --duration-slower:  500ms;
+  --duration-blink:   600ms; /* 光标闪烁 */
+
+  /* ── 常用复合过渡 ── */
+  --transition-fast:   all var(--duration-fast)   var(--ease-out);
+  --transition-normal: all var(--duration-normal)  var(--ease-in-out);
+  --transition-slow:   all var(--duration-slow)    var(--ease-in-out);
+  --transition-color:  color var(--duration-fast)  var(--ease-out),
+                       background-color var(--duration-fast) var(--ease-out),
+                       border-color var(--duration-fast) var(--ease-out);
+}
+
+/* ── 关键帧 —— 在此统一注册，各组件按需 apply ── */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes pixel-shake {
+  0%  { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+  100%{ transform: translate(0, 0); }
+}
+
+@keyframes scanline-scroll {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: var(--glow-primary); }
+  50%       { box-shadow: var(--glow-primary), 0 0 48px rgba(232, 69, 69, 0.2); }
+}
+
+@keyframes power-on {
+  0%   { opacity: 0; transform: scaleY(0.02) scaleX(1); filter: brightness(4); }
+  10%  { opacity: 1; transform: scaleY(0.06) scaleX(1); }
+  30%  { transform: scaleY(1.05) scaleX(1); }
+  45%  { transform: scaleY(0.98) scaleX(1); }
+  100% { opacity: 1; transform: scale(1); filter: none; }
+}
+
+@keyframes float-pixel {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+
+/* ====================================================================
+   七、断点系统 (Breakpoint Tokens — CSS 自定义属性 + Media Query 注释)
+   注意：CSS 自定义属性无法直接用于 @media，此处以注释形式记录，
+         实际响应式断点在各组件 CSS 中用硬编码值书写。
+   ==================================================================== */
+/*
+  断点参考（移动优先 / min-width）：
+  --breakpoint-sm:  480px   — 手机横屏
+  --breakpoint-md:  768px   — 平板竖屏
+  --breakpoint-lg:  1024px  — 桌面小屏
+  --breakpoint-xl:  1280px  — 桌面标准
+  --breakpoint-2xl: 1440px  — 宽屏
+*/
+
+
+/* ====================================================================
+   八、游戏主题专属 Token (Game-Specific Tokens)
+   ==================================================================== */
+:root {
+  /* ── 复古配色 —— NES 调色板参考 ── */
+  --nes-red:    #e84545;
+  --nes-gray:   #4a4a6a;
+  --nes-dark:   #1a1a2e;
+  --nes-light:  #c8c8e8;
+  --nes-green:  #10c060;
+  --nes-blue:   #2244cc;
+  --nes-yellow: #ffb347;
+
+  /* ── 成就/等级颜色 ── */
+  --rank-bronze: #cd7f32;
+  --rank-silver: #a8a9ad;
+  --rank-gold:   #ffb347;
+  --rank-plat:   #6af0e4;
+  --rank-diamond:#b9f2ff;
+
+  /* ── 游戏 UI 元素 ── */
+  --hud-bg:      rgba(13, 13, 13, 0.85);  /* HUD 半透明底 */
+  --hud-border:  1px solid #2d2d2d;
+  --bar-hp:      #e84545;                  /* 血条 */
+  --bar-exp:     #ffb347;                  /* 经验条 */
+  --bar-mana:    #4488ff;                  /* 魔力条 */
+  --bar-track:   #2d2d2d;                  /* 条形进度轨道 */
+
+  /* ── 扫描线/CRT 特效参数 ── */
+  --scanline-height:   2px;
+  --scanline-opacity:  0.18;
+  --scanline-color:    rgba(0, 0, 0, var(--scanline-opacity));
+
+  /* ── 像素字体渲染建议 ── */
+  --pixel-font-rendering: optimizeSpeed; /* image-rendering 对应值 */
+}
+
+
+/* ====================================================================
+   九、无障碍与减少动画 (Accessibility Tokens)
+   ==================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:    0ms;
+    --duration-normal:  0ms;
+    --duration-slow:    0ms;
+    --duration-slower:  0ms;
+    --transition-fast:  none;
+    --transition-normal:none;
+    --transition-slow:  none;
+    --transition-color: none;
+  }
+}
+
+/* 高对比模式：加强描边和文字可见性 */
+@media (forced-colors: active) {
+  :root {
+    --color-border:       ButtonText;
+    --color-text-primary: CanvasText;
+    --color-bg-surface:   Canvas;
+    --color-primary:      Highlight;
+  }
+}
+
+
+/* ====================================================================
+   十、基础重置与 Token 应用 (Base Reset)
+   ==================================================================== */
+
+/* 滚动条样式 — WebKit */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-root);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dim);
+}
+
+/* 选中文字颜色 */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+/* 聚焦轮廓 — 保证键盘无障碍可见 */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 3px;
+}

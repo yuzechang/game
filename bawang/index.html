@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>RetroFC — 怀旧游戏</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部导航栏（玻璃拟态） -->
+<nav id="topbar">
+  <div class="logo-group">
+    <div class="logo-dot"></div>
+    <span class="logo-text">RetroFC</span>
+  </div>
+  <div id="game-status" data-i18n="status-standby">待机中</div>
+  <div class="nav-actions">
+    <button id="btn-lang" title="切换语言 / Switch Language">中</button>
+    <button id="btn-donate" title="打赏支持">☕</button>
+    <button id="btn-reset" class="tb-btn" title="重置游戏 (R)" data-i18n="btn-reset">↺ 重置</button>
+    <button id="btn-change-game" class="tb-btn primary" data-i18n="btn-change-game">浏览游戏库</button>
+  </div>
+</nav>
+
+<!-- 主区域 -->
+<main id="main-area">
+  <div id="screen-container">
+    <!-- 屏幕边框 -->
+    <div id="screen-frame">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- 待机画面 -->
+      <div id="standby">
+        <div class="standby-logo">RETROFC</div>
+        <div class="standby-subtitle" data-i18n="standby-subtitle">选择一款经典游戏，开始放松</div>
+        <button class="standby-start-btn" id="standby-start-btn" data-i18n="standby-start-btn">浏览游戏库</button>
+      </div>
+
+      <!-- 加载遮罩 -->
+      <div id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div id="loading-text">加载中...</div>
+        <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+      </div>
+    </div>
+
+    <!-- 键盘控制提示 -->
+    <div id="controls-hint">
+      <div class="hint-group">
+        <kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd>
+        <span class="hint-label">方向</span>
+      </div>
+      <div class="hint-divider"></div>
+      <div class="hint-group">
+        <kbd>Space</kbd>
+        <span class="hint-label">确认</span>
+      </div>
+      <div class="hint-divider"></div>
+      <div class="hint-group">
+        <kbd>R</kbd>
+        <span class="hint-label">重开</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- 游戏选择模态框 -->
+<div id="modal-overlay">
+  <div id="modal">
+    <div id="modal-header">
+      <div id="modal-title" data-i18n="modal-title">游戏库</div>
+      <div id="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" data-i18n-placeholder="search-placeholder" placeholder="搜索游戏...">
+      </div>
+      <button id="modal-close">✕</button>
+    </div>
+    <div id="game-grid"></div>
+    <div id="game-count"></div>
+  </div>
+</div>
+
+<!-- 打赏弹窗（双通道：国内 + 国际） -->
+<div id="donate-overlay">
+  <div id="donate-modal">
+    <div id="donate-modal-header">
+      <div id="donate-modal-title" data-i18n="donate-title">☕ 支持作者</div>
+      <button id="donate-modal-close">✕</button>
+    </div>
+    <!-- Tab 切换栏 -->
+    <div id="donate-tabs">
+      <button class="donate-tab active" data-tab="cn" data-i18n="donate-tab-cn">🇨🇳 国内打赏</button>
+      <button class="donate-tab" data-tab="intl" data-i18n="donate-tab-intl">🌍 International</button>
+    </div>
+    <!-- 国内面板：二维码 -->
+    <div class="donate-panel active" id="donate-panel-cn">
+      <img src="ds.jpg" alt="打赏二维码">
+      <div class="donate-heart">❤️</div>
+      <div class="donate-msg" data-i18n-html="donate-msg-cn">感谢您的支持！<br>微信/支付宝扫码打赏</div>
+    </div>
+    <!-- 国际面板：Buy Me a Coffee + PayPal -->
+    <div class="donate-panel" id="donate-panel-intl">
+      <a class="donate-link-btn paypal" id="donate-paypal-link"
+         href="https://paypal.me/yuzec933"
+         target="_blank" rel="noopener">
+        💳 PayPal.me
+      </a>
+      <div class="donate-heart">❤️</div>
+      <div class="donate-msg" data-i18n-html="donate-msg-intl">Thanks for your support!<br>Every coffee keeps the games coming ☕</div>
+    </div>
+  </div>
+</div>
+
+<!-- 脚本 -->
+<script src="js/game_modules.js"></script>
+<script src="js/game_snake.js"></script>
+<script src="js/game_2048.js"></script>
+<script src="js/game_memory.js"></script>
+<script src="js/game_breakout.js"></script>
+<script src="js/game_minesweeper.js"></script>
+<script src="js/game_whackamole.js"></script>
+<script src="js/game_lianliankan.js"></script>
+<script src="js/game_sokoban.js"></script>
+<script src="js/game_sandfall.js"></script>
+<script src="js/games-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
